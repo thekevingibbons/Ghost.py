@@ -1192,8 +1192,7 @@ class Session(object):
         self.webview.resize(new_size)
         self.page.setPreferredContentsSize(new_size)
         self.page.setViewportSize(new_size)
-
-        self.sleep()
+        self.ghost._app.processEvents()
 
     def append_popup_message(self, message):
         self.popup_messages.append(unicode(message))
