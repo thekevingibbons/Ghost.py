@@ -1132,7 +1132,7 @@ class Session(object):
         started_at = time.time()
         while not condition():
             if time.time() > (started_at + timeout):
-                raise TimeoutError(timeout_message)
+                return False
             self.sleep()
             if self.wait_callback is not None:
                 self.wait_callback()
@@ -1207,6 +1207,18 @@ class Session(object):
             timeout,
         )
         return True, self._release_last_resources()
+
+    def wait_for_change(self, timeout=None):
+        """Waits until any element on the webpage changes
+        :param timeout: An optional timeout.
+        """
+        originalContent=self.content
+        contentChanged = self.wait_for(lambda: self.content != originalContent,
+            'Timed out without the webpage changing',
+            timeout,
+        )
+        if contentChanged:
+            return True
 
     def _authenticate(self, mix, authenticator):
         """Called back on basic / proxy http auth.
