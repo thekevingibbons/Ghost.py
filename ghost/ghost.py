@@ -1132,6 +1132,7 @@ class Session(object):
         started_at = time.time()
         while not condition():
             if time.time() > (started_at + timeout):
+                #raise TimeoutError(timeout_message)
                 return False
             self.sleep()
             if self.wait_callback is not None:
@@ -1217,7 +1218,9 @@ class Session(object):
             'Timed out without the webpage changing',
             timeout,
         )
-        if contentChanged:
+        if contentChanged == False:
+            return False
+        else:
             return True
 
     def _authenticate(self, mix, authenticator):
